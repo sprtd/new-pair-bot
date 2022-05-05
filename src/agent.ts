@@ -34,24 +34,13 @@ const mintTxHandler = ({ address, createFunctionSig }: newPairParamsType): Handl
 
     const createdPairs = txEvent.filterFunction(createFunctionSig, address);
 
-    const addr1: string = '0x8F667304b58B548C73F0B74369A027FEf048dc3b'
-    let addr2: string = '  0x8F6673048B548C73F0B74369A027FEf048dc3b'
-    addr2.toUpperCase()
-    console.log(`address 2: ${addr2}`)
-
-    if(addr1 === addr2) {
-      console.log(`same address: ${true}`)
-    } else {
-      console.log(`not same address: ${false}`)
-      
-    }
     createdPairs.forEach(createdPair => {
       const { transaction, network } = txEvent;
       console.log(`network: ${network}`)
       console.log(`transaction: ${transaction}`)
 
       
-      0x8F667304b58B548C73F0B74369A027FEf048dc3b
+      
       // const txTo: string | undefined = transaction.to?.toString();
 
       // const { args } = createPair;
