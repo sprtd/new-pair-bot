@@ -8,7 +8,7 @@ import {
 
 import { formatEther } from "@ethersproject/units";
 
-import { 
+import {  
   createFinding, 
   contractMetadata, 
   contractType, 
@@ -24,45 +24,63 @@ const {
 } = GLOBALS;
 
 const newPairParams: newPairParamsType = {
-    address: '',
-    createFunctionSig: ''
+    address: APEFACTORY_ADDRESS,
+    createFunctionSig: CREATE_PAIR_FUNCTION
 }
 
-const mintTxHandler = (functionAbi: string, contractInfo: contractType): HandleTransaction => {
+const mintTxHandler = ({ address, createFunctionSig }: newPairParamsType): HandleTransaction => {
   return async (txEvent: TransactionEvent): Promise<Finding[]> => {
     const findings: Finding[] = [];
 
-    const bananaMints = txEvent.filterFunction(functionAbi);
+    const createdPairs = txEvent.filterFunction(createFunctionSig, address);
 
-    bananaMints.forEach((bananaMint) => {
+    const addr1: string = '0x8F667304b58B548C73F0B74369A027FEf048dc3b'
+    let addr2: string = '  0x8F6673048B548C73F0B74369A027FEf048dc3b'
+    addr2.toUpperCase()
+    console.log(`address 2: ${addr2}`)
+
+    if(addr1 === addr2) {
+      console.log(`same address: ${true}`)
+    } else {
+      console.log(`not same address: ${false}`)
+      
+    }
+    createdPairs.forEach(createdPair => {
       const { transaction, network } = txEvent;
+      console.log(`network: ${network}`)
+      console.log(`transaction: ${transaction}`)
 
-      const txTo: string | undefined = transaction.to?.toString();
+      
+      0x8F667304b58B548C73F0B74369A027FEf048dc3b
+      // const txTo: string | undefined = transaction.to?.toString();
 
-      const { args } = bananaMint;
-      const [amount] = args;
+      // const { args } = createPair;
+      // const [amount] = args;
 
-      const txValue: string = formatEther(amount);
+      // const txValue: string = formatEther(amount);
 
-      const botMetaData = {
-        from: transaction.from,
-        to: txTo,
-        value: txValue,
-        network: network.toString(),
-      };
+      // const botMetaData = {
+      //   from: transaction.from,
+      //   to: txTo,
+      //   value: txValue,
+      //   network: network.toString(),
+      // };
 
-      const txValueToNum: number = parseFloat(txValue);
+      // const txValueToNum: number = parseFloat(txValue);
 
-      if (txValueToNum >= BANANA_MINT_AMOUNT) {
-        findings.push(createFinding(botMetaData));
-      }
+      // if (txValueToNum >= BANANA_MINT_AMOUNT) {
+      //   findings.push(createFinding(botMetaData));
+      // }
+
+      console.log(`created pair: ${createdPair}`)
+      console.log({...createdPair})
     });
     return findings;
   };
 };
 
 export default {
-  handleTransaction: mintTxHandler(BANANA_MINT_FUNCTION, contractMetaData),
+  handleTransaction: mintTxHandler(newPairParams)
 };
 
 export { mintTxHandler };

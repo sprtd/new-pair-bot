@@ -54,6 +54,9 @@ const createFinding = (findingMetada: newPairFindingType): Finding => {
   return Finding.fromObject(findingResult);
 };
 
+
+
+
 export { 
     createFinding,
     newPairFindingType, 
