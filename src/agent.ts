@@ -1,42 +1,31 @@
-import {
-  Finding,
-  HandleTransaction,
-  TransactionEvent,
-} from "forta-agent";
+import { Finding, HandleTransaction, TransactionEvent } from "forta-agent";
 
+import { createFinding, newPairParamsType, newPairFindingType, providerParams } from "./utils";
 
-import {  
-  createFinding, 
-  newPairParamsType, 
-  newPairFindingType,
-  providerParams
-} from "./utils";
-
-const mintTxHandler = ({ createFunctionSig, address }: newPairParamsType): HandleTransaction => {
+const createPairProvider = ({ createFunctionSig, address }: newPairParamsType): HandleTransaction => {
   return async (txEvent: TransactionEvent): Promise<Finding[]> => {
-    const findings: Finding[] = []
-    const createPairFunctionCalls: string[] = []
+    const findings: Finding[] = [];
+    const createPairFunctionCalls: string[] = [];
 
-    const txLogs = txEvent.filterFunction(createFunctionSig, address)
+    const txLogs = txEvent.filterFunction(createFunctionSig, address);
 
     txLogs.forEach((txLog) => {
-      const { args, name } = txLog
- 
+      const { args, name } = txLog;
+
       const newPairMetadata: newPairFindingType = {
         tokenAAddress: args[0],
         tokenBAddress: args[1],
         contractDeployer: txEvent.from,
         timestamp: new Date(txEvent.timestamp * 1000).toString(),
-      }
+      };
 
-      findings.push(createFinding(newPairMetadata))
-    })
-    return findings   
-  }
-
-}
+      findings.push(createFinding(newPairMetadata));
+    });
+    return findings;
+  };
+};
 export default {
-  handleTransaction: mintTxHandler(providerParams)
+  handleTransaction: createPairProvider(providerParams),
 };
 
-export { mintTxHandler };
+export { createPairProvider };
