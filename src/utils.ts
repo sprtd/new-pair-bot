@@ -1,5 +1,6 @@
-import { Finding, FindingSeverity, FindingType, LogDescription, ethers } from "forta-agent";
+import { Finding, FindingSeverity, FindingType } from "forta-agent";
 import { GLOBALS } from "./constants";
+
 const { 
     CREATE_PAIR_FUNCTION,
     APEFACTORY_ADDRESS,
@@ -7,41 +8,29 @@ const {
 
 // finding type definition
 type newPairFindingType = {
-  tokenAName: string
+  tokenAName?: string
   tokenAAddress: string;
-  tokenBName: string;
+  tokenBName?: string;
   tokenBAddress: string;
   contractDeployer: string
-  contractName: string
+  contractName?: string
   timestamp: string
-  network: string
+  network?: string
 };
 
-type contractType = {
-  address: string;
-};
 
 type newPairParamsType = {
-    address: string,
-    createFunctionSig: string
+  createFunctionSig: string
+  address: string,
+}
+
+const providerParams: newPairParamsType = {
+  address: APEFACTORY_ADDRESS,
+  createFunctionSig: CREATE_PAIR_FUNCTION
 }
 
 
-
-const contractMetadata: contractType = {
-  address: APEFACTORY_ADDRESS
-};
-
-let findingMetada: newPairFindingType
-
-const createFinding = (findingMetada: newPairFindingType): Finding => {
-  let txNetwork: string = "";
-  if (findingMetada.network === "56") {
-    txNetwork = "BNB Chain";
-  } else {
-    txNetwork = "Polygon";
-  }
-
+const createFinding = (findingMetadata: newPairFindingType): Finding => {
   const findingResult = {
     name: "new pair creation detection bot",
     description: `Detect the creation of new tradable pairs on Apeswap`,
@@ -49,18 +38,17 @@ const createFinding = (findingMetada: newPairFindingType): Finding => {
     severity: FindingSeverity.Info,
     type: FindingType.Info,
     protocol: "Apeswap",
-    metadata: findingMetada
+    metadata: findingMetadata
   }
-  return Finding.fromObject(findingResult);
-};
 
+  return Finding.fromObject(findingResult);
+}
 
 
 
 export { 
     createFinding,
     newPairFindingType, 
-    contractType, 
-    contractMetadata, 
-    newPairParamsType
+    newPairParamsType,
+    providerParams
 };
