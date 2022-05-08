@@ -5,18 +5,20 @@ import { createFinding, newPairParamsType, newPairFindingType, providerParams } 
 const createPairProvider = ({ createFunctionSig, address }: newPairParamsType): HandleTransaction => {
   return async (txEvent: TransactionEvent): Promise<Finding[]> => {
     const findings: Finding[] = [];
-    const createPairFunctionCalls: string[] = [];
 
     const txLogs = txEvent.filterFunction(createFunctionSig, address);
 
-    txLogs.forEach((txLog) => {
-      const { args, name } = txLog;
+    const { transaction, timestamp } = txEvent;
 
+    console.log(`from: ${transaction.from}`);
+    console.log({ ...transaction });
+
+    txLogs.forEach((txLog) => {
+      const { args } = txLog;
+      
       const newPairMetadata: newPairFindingType = {
-        tokenAAddress: args[0],
-        tokenBAddress: args[1],
-        contractDeployer: txEvent.from,
-        timestamp: new Date(txEvent.timestamp * 1000).toString(),
+        tokenAAddress: args[0].toLowerCase(),
+        tokenBAddress: args[1].toLowerCase(),
       };
 
       findings.push(createFinding(newPairMetadata));

@@ -1,18 +1,12 @@
 import { Finding, FindingSeverity, FindingType } from "forta-agent";
-import { GLOBALS } from "./constants";
+import { APEFACTORY_ABI } from "./constants";
 
-const { CREATE_PAIR_FUNCTION, APEFACTORY_ADDRESS } = GLOBALS;
+const { CREATE_PAIR_FUNCTION, APEFACTORY_ADDRESS } = APEFACTORY_ABI;
 
 // finding type definition
 type newPairFindingType = {
-  tokenAName?: string;
   tokenAAddress: string;
-  tokenBName?: string;
   tokenBAddress: string;
-  contractDeployer: string;
-  contractName?: string;
-  timestamp: string;
-  network?: string;
 };
 
 type newPairParamsType = {
