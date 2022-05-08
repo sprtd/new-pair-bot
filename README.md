@@ -6,7 +6,7 @@ This bot detects the creation of new tradable pair on Apeswap
 
 ## Supported Chains
 
-- BNBChain
+- Binance Smart Chain
 
 
 
